@@ -2,17 +2,29 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const auth = require("./routes/auth");
+const passport = require("./passport");
+const session = require("express-session");
 const app = express();
 
 app.use(bodyParser({ extended: true }));
+app.use(session({ secret: "riphumanity" }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 app.get("/", (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.send("Welcome");
 });
 
-app.use("/auth", auth);
+app.use("/api/auth", auth);
 
 mongoose
   .connect(
