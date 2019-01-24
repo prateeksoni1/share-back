@@ -67,7 +67,7 @@ route.post("/login", (req, res, next) => {
 route.get("/logout", (req, res) => {
   req.logOut();
   console.log("logged out");
-  res.send({ loggedIn: false });
+  res.status(200).send({ loggedIn: false });
 });
 
 module.exports = route;

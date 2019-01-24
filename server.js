@@ -2,12 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const auth = require("./routes/auth");
+const posts = require("./routes/posts");
 const passport = require("./passport");
 const session = require("express-session");
 const app = express();
 
 app.use(bodyParser({ extended: true }));
-app.use(session({ secret: "riphumanity" }));
+app.use(
+  session({ secret: "riphumanity", resave: true, saveUninitialized: false })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -25,6 +28,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", auth);
+app.use("/api/posts", posts);
 
 mongoose
   .connect(

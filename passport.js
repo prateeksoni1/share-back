@@ -23,15 +23,17 @@ passport.use(
     },
     (email, password, done) => {
       console.log("local called");
-      User.findOne({ email }).then(user => {
-        console.log("yo");
-        const isValid = bcrypt.compareSync(password, user.password);
-        if (!isValid) {
-          done(null, false);
-        } else {
-          done(null, user);
-        }
-      });
+      User.findOne({ email })
+        .then(user => {
+          console.log("yo");
+          const isValid = bcrypt.compareSync(password, user.password);
+          if (!isValid) {
+            done(null, false);
+          } else {
+            done(null, user);
+          }
+        })
+        .catch(err => console.log(err));
     }
   )
 );
