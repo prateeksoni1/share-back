@@ -5,10 +5,12 @@ route.post("/", (req, res) => {
   const userId = req.body.userId;
   const title = req.body.title;
   const post = req.body.post;
+  const tags = req.body.tags;
   Post.create({
     userId,
     title,
-    post
+    post,
+    tags
   }).then(post => {
     res.send(post).status(200);
     console.log(post);
@@ -17,10 +19,16 @@ route.post("/", (req, res) => {
 
 route.get("/", (req, res) => {
   const userId = req.query.id;
-  console.log(userId);
-  Post.find({ userId }).then(posts => {
-    console.log(posts);
-  });
+  if (userId === undefined) {
+    Post.find().then(posts => {
+      res.send(posts);
+    });
+  } else {
+    console.log(userId);
+    Post.find({ userId }).then(posts => {
+      res.send(posts);
+    });
+  }
 });
 
 module.exports = route;

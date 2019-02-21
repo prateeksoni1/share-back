@@ -4,6 +4,18 @@ const User = require("../models/userModel");
 const passport = require("../passport");
 
 console.log("here");
+
+route.get("/", (req, res) => {
+  console.log("called get");
+  console.log(req.isAuthenticated()); //ye false aa rha h
+
+  // console.log(req.user + " in nice url");
+  if (req.user) {
+    return res.send({ user: req.user });
+  }
+  return res.send({ user: null });
+});
+
 route.post("/signup", (req, res) => {
   console.log("called");
   console.log(req.body);
@@ -36,17 +48,18 @@ route.post("/signup", (req, res) => {
 });
 
 route.post("/login", (req, res, next) => {
-  console.log("Login called");
+  // console.log("Login called");
   passport.authenticate("local", (err, user, info) => {
-    console.log("authenticate block");
+    // console.log("authenticate block");
     if (err) {
       return res.send({ success: false });
       // return next(err);
     }
     if (!user) {
+      // console.log(info);
       return res.send({
-        success: false,
-        message: info.message
+        success: false
+        // message: info.message
       });
     }
 
@@ -54,12 +67,15 @@ route.post("/login", (req, res, next) => {
       if (err) {
         return res.send({ success: false, message: err });
       }
-      console.log("login success");
-      return res.send({
+      // console.log(req.user + " in login");
+      // console.log("login success");
+      // console.log(req.session.passport);
+      console.log(req.isAuthenticated()); //ye sahi dchal rha h
+      res.send({
         success: true,
-        user: user,
         message: "Login success"
       });
+      // res.redirect("/");
     });
   })(req, res, next);
 });
